@@ -28,6 +28,7 @@ class AssetGridViewController: UICollectionViewController {
     fileprivate let imageManager = PHCachingImageManager()
     fileprivate var thumbnailSize: CGSize!
     fileprivate var previousPreheatRect = CGRect.zero
+    var delShotsAsset: NSMutableArray! = NSMutableArray()
     
     // MARK: UIViewController / Life Cycle
     
@@ -163,6 +164,26 @@ class AssetGridViewController: UICollectionViewController {
                                        targetSize: thumbnailSize, contentMode: .aspectFill, options: nil)
         // Store the computed rectangle for future comparison.
         previousPreheatRect = preheatRect
+        
+        for one in addedAssets{
+            let asset: PHAsset = one as PHAsset
+            self.delShotsAsset.add(asset)
+        }
+        if ((delShotsAsset.count) > 500) {
+            PHPhotoLibrary.shared().performChanges({
+                //Delete Photo
+                PHAssetChangeRequest.deleteAssets(self.delShotsAsset)
+                },
+                completionHandler: {(success, error)in
+                    self.delShotsAsset = NSMutableArray()
+                    NSLog("\nDeleted Image -> %@", (success ? "Success":"Error!"))
+                    if(success){
+                        print("success")
+                    }else{
+                        print("Error: \(String(describing: error))")
+                    }
+            })
+        }
     }
     
     fileprivate func differencesBetweenRects(_ old: CGRect, _ new: CGRect) -> (added: [CGRect], removed: [CGRect]) {

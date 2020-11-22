@@ -135,7 +135,7 @@ class MasterViewController: UITableViewController {
         switch Section(rawValue: indexPath.section)! {
         case .allPhotos:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.allPhotos.rawValue, for: indexPath)
-            cell.textLabel!.text = NSLocalizedString("All Photos", comment: "")
+            cell.textLabel!.text = NSLocalizedString("Delete All Photos", comment: "")
             return cell
             
         case .smartAlbums:
